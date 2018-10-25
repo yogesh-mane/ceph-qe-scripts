@@ -98,32 +98,6 @@ def test_exec(config):
                                 if object_uploaded_status is None:
                                     log.info('object uploaded')
 
-                                if config.test_ops['download_object'] is True:
-
-                                    log.info('trying to download object: %s' % s3_object_name)
-
-                                    s3_object_download_name = s3_object_name + "." + "download"
-
-                                    s3_object_download_path = os.path.join(TEST_DATA_PATH, s3_object_download_name)
-
-                                    log.info('s3_object_download_path: %s' % s3_object_download_path)
-
-                                    log.info('downloading to filename: %s' % s3_object_download_name)
-
-#                                    object_downloaded_status = bucket.download_file(s3_object_path, s3_object_name)
-
-                                    object_downloaded_status = s3lib.resource_op({'obj': bucket,
-                                                                                  'resource': 'download_file',
-                                                                                  'args': [s3_object_name,
-                                                                                           s3_object_download_path],
-                                                                                  })
-
-                                    if object_downloaded_status is False:
-                                        raise TestExecError("Resource execution failed: object download failed")
-
-                                    if object_downloaded_status is None:
-                                        log.info('object downloaded')
-
                             if config.test_ops['delete_bucket_object'] is True:
 
                                 log.info('listing all objects in bucket: %s' % bucket.name)
@@ -196,6 +170,61 @@ def test_exec(config):
 
                                 else:
                                     raise TestExecError("bucket deletion failed")
+
+
+                    if config.test_ops['download_object'] is True:
+
+                        log.info('listing all objects in bucket: %s' % bucket.name)
+
+                        # objects = s3_ops.resource_op(bucket, 'objects', None)
+                        objects = s3lib.resource_op({'obj': bucket,
+                                                     'resource': 'objects',
+                                                     'args': None})
+
+                        log.info('objects :%s' % objects)
+
+                        all_objects = s3lib.resource_op({'obj': objects,
+                                                         'resource': 'all',
+                                                         'args': None})
+
+                        log.info('all objects: %s' % all_objects)
+
+                        for obj in all_objects:
+                            log.info('object_name: %s' % obj.key)
+
+                            log.info('trying to download object: %s' % obj.key)
+
+                            s3_object_download_name = obj.key + "." + "download"
+
+                            s3_object_download_path = os.path.join(TEST_DATA_PATH, s3_object_download_name)
+
+                            log.info('s3_object_download_path: %s' % s3_object_download_path)
+
+                            log.info('downloading to filename: %s' % s3_object_download_name)
+
+                            if config.test_ops.get('encryption_algorithm', None) is not None:
+
+                                log.info('encryption download')
+
+                                log.info('encryption algorithm: %s' % config.test_ops['encryption_algorithm'])
+
+                                object_downloaded_status = bucket.download_file(obj.key, s3_object_download_path,
+                                                    ExtraArgs={'SSECustomerKey': encryption_key,
+                                                               'SSECustomerAlgorithm': config.test_ops['encryption_algorithm'] })
+
+                            else:
+
+                                object_downloaded_status = s3lib.resource_op({'obj': bucket,
+                                                                              'resource': 'download_file',
+                                                                              'args': [obj.key,
+                                                                                       s3_object_download_path],
+                                                                              })
+
+                            if object_downloaded_status is False:
+                                raise TestExecError("Resource execution failed: object download failed")
+
+                            if object_downloaded_status is None:
+                                log.info('object downloaded')
 
         test_info.success_status('test passed')
 
