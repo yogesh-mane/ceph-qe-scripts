@@ -56,7 +56,7 @@ if __name__ == '__main__':
     else:
         with open(yaml_file, 'r') as f:
             doc = yaml.load(f)
-        config.cluster_name = doc['config']['cluster_name']
+
         config.user_count = doc['config']['user_count']
 
     log.info('user_count:%s\n' % (

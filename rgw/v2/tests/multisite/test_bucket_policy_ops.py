@@ -47,12 +47,10 @@ def test_exec(config):
         tenant1 = 'MountEverest'
         tenant2 = 'Himalayas'
 
-        tenant1_user_info = s3lib.create_tenant_users(tenant_name=tenant1, no_of_users_to_create=config.user_count,
-                                                      cluster_name=config.cluster_name)
+        tenant1_user_info = s3lib.create_tenant_users(tenant_name=tenant1, no_of_users_to_create=config.user_count)
         tenant1_user1_info = tenant1_user_info[0]
 
-        tenant2_user_info = s3lib.create_tenant_users(tenant_name=tenant2, no_of_users_to_create=config.user_count,
-                                                      cluster_name=config.cluster_name)
+        tenant2_user_info = s3lib.create_tenant_users(tenant_name=tenant2, no_of_users_to_create=config.user_count)
         tenant2_user1_info = tenant2_user_info[0]
 
         tenant1_user1_auth = Auth(tenant1_user1_info)
@@ -312,6 +310,6 @@ if __name__ == '__main__':
         doc = yaml.load(f)
 
     config.bucket_policy_op = doc['config']['bucket_policy_op']
-    config.cluster_name = doc['config']['cluster_name']
+
 
     test_exec(config)

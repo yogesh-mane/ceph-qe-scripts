@@ -53,7 +53,7 @@ def test_exec(config):
 
         # create user
 
-        all_users_info = s3lib.create_users(config.user_count, config.cluster_name)
+        all_users_info = s3lib.create_users(config.user_count)
 
         for each_user in all_users_info:
 
@@ -186,7 +186,7 @@ if __name__ == '__main__':
         with open(yaml_file, 'r') as f:
             doc = yaml.load(f)
         config.user_count = doc['config']['user_count']
-        config.cluster_name = doc['config']['cluster_name']
+
         config.bucket_count = doc['config']['bucket_count']
         config.objects_count = doc['config']['objects_count']
         config.objects_size_range = {'min': doc['config']['objects_size_range']['min'],

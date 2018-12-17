@@ -43,9 +43,9 @@ def test_exec(config):
         tenant = 'tenant'
 
         tenant_user_info = umgmt.create_tenant_user(tenant_name=tenant, user_id=user_names[0],
-                                                    displayname=user_names[0], cluster_name=config.cluster_name)
+                                                    displayname=user_names[0])
 
-        user_info = umgmt.create_subuser(tenant_name=tenant, user_id=user_names[0], cluster_name=config.cluster_name)
+        user_info = umgmt.create_subuser(tenant_name=tenant, user_id=user_names[0])
 
         auth = Auth(user_info)
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
 
     config.container_count = doc['config']['container_count']
     config.objects_count = doc['config']['objects_count']
-    config.cluster_name = doc['config']['cluster_name']
+
     config.objects_size_range = {'min': doc['config']['objects_size_range']['min'],
                                  'max': doc['config']['objects_size_range']['max']}
 

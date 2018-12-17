@@ -1,3 +1,2 @@
 config:
- cluster_name: source
  user_count: 3

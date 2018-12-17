@@ -65,11 +65,11 @@ def test_exec(config):
         tenant1 = 'tenant1'
         tenant2 = 'tenant2'
 
-        t1_u1_info = create_tenant_user(tenant_name=tenant1, user_id=user_names[0], cluster_name=config.cluster_name)
+        t1_u1_info = create_tenant_user(tenant_name=tenant1, user_id=user_names[0])
         t1_u1_auth = Auth(t1_u1_info)
         t1_u1 = t1_u1_auth.do_auth()
 
-        t2_u1_info = create_tenant_user(tenant_name=tenant2, user_id=user_names[0], cluster_name=config.cluster_name)
+        t2_u1_info = create_tenant_user(tenant_name=tenant2, user_id=user_names[0])
         t2_u1_auth = Auth(t2_u1_info)
         t2_u1 = t2_u1_auth.do_auth()
 
@@ -87,7 +87,7 @@ def test_exec(config):
                                 TEST_DATA_PATH=TEST_DATA_PATH,
                                 config=config, user_info=t1_u1_info)
 
-        t2_u2_info = create_tenant_user(tenant_name=tenant2, user_id=user_names[1], cluster_name=config.cluster_name)
+        t2_u2_info = create_tenant_user(tenant_name=tenant2, user_id=user_names[1])
         t2_u2_auth = Auth(t2_u2_info)
         t2_u2 = t2_u2_auth.do_auth()
 
@@ -184,7 +184,7 @@ if __name__ == '__main__':
         with open(yaml_file, 'r') as f:
             doc = yaml.load(f)
         config.user_count = doc['config']
-        config.cluster_name = doc['config']['cluster_name']
+
         config.objects_size_range = {'min': doc['config']['objects_size_range']['min'],
                                      'max': doc['config']['objects_size_range']['max']}
 

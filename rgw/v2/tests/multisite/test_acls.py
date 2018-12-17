@@ -227,7 +227,7 @@ def test_exec(config):
 
         config.user_count = 2
 
-        all_users_info = s3lib.create_users(config.user_count, config.cluster_name)
+        all_users_info = s3lib.create_users(config.user_count)
 
         u1 = all_users_info[0]
         u2 = all_users_info[1]

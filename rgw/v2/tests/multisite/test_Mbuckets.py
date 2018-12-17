@@ -30,7 +30,7 @@ def test_exec(config):
     io_info_initialize.initialize(basic_io_structure.initial())
     write_user_info = AddUserInfo()
     test_info = AddTestInfo('create m buckets')
-    conf_path = '/etc/ceph/%s.conf' % config.cluster_name
+    conf_path = '/etc/ceph/ceph.conf'
     ceph_conf = CephConfOp(conf_path)
     rgw_service = RGWService()
 
@@ -122,15 +122,15 @@ def test_exec(config):
                         raise TestExecError("bucket creation failed")
 
                     if config.test_ops['sharding']['enable'] is True:
-                        cmd = 'radosgw-admin metadata get bucket:%s --cluster %s | grep bucket_id' \
-                              % (bucket.name, config.cluster_name)
+                        cmd = 'radosgw-admin metadata get bucket:%s | grep bucket_id' \
+                              % (bucket.name)
 
                         out = utils.exec_shell_cmd(cmd)
 
                         b_id = out.replace('"', '').strip().split(":")[1].strip().replace(',', '')
 
-                        cmd2 = 'rados -p default.rgw.buckets.index ls --cluster %s | grep %s' \
-                               % (config.cluster_name, b_id)
+                        cmd2 = 'rados -p default.rgw.buckets.index ls | grep %s' \
+                               % b_id
 
                         out = utils.exec_shell_cmd(cmd2)
 
@@ -182,11 +182,9 @@ if __name__ == '__main__':
         with open(yaml_file, 'r') as f:
             doc = yaml.load(f)
         config.bucket_count = doc['config']['bucket_count']
-        config.cluster_name = doc['config']['cluster_name']
         config.test_ops = doc['config']['test_ops']
 
-    log.info('bucket_count: %s\n'
-             'cluster_name: %s' % (config.bucket_count, config.cluster_name))
+    log.info('bucket_count: %s\n' % config.bucket_count)
 
     log.info('test_ops: %s' % config.test_ops)
 

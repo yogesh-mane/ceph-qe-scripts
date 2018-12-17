@@ -40,8 +40,8 @@ def test_exec(config):
         user_names = ['tuffy', 'scooby', 'max']
         tenant1 = 'tenant'
 
-        cmd = 'radosgw-admin user create --uid=%s --display-name="%s" --tenant=%s --cluster %s' \
-              %(user_names[0], user_names[0], tenant1, config.cluster_name)
+        cmd = 'radosgw-admin user create --uid=%s --display-name="%s" --tenant=%s' \
+              %(user_names[0], user_names[0], tenant1)
         out = utils.exec_shell_cmd(cmd)
 
         if out is False:
@@ -51,8 +51,8 @@ def test_exec(config):
         v1_as_json = json.loads(out)
         log.info('creted user_id: %s' % v1_as_json['user_id'])
 
-        cmd2 = 'radosgw-admin subuser create --uid=%s$%s --subuser=%s:swift --tenant=%s --access=full --cluster %s' \
-               % (tenant1, user_names[0], user_names[0], tenant1, config.cluster_name)
+        cmd2 = 'radosgw-admin subuser create --uid=%s$%s --subuser=%s:swift --tenant=%s --access=full' \
+               % (tenant1, user_names[0], user_names[0], tenant1)
         out2 = utils.exec_shell_cmd(cmd2)
 
         if out2 is False:
@@ -61,8 +61,8 @@ def test_exec(config):
         v2_as_json = json.loads(out2)
         log.info('created subuser: %s' % v2_as_json['subusers'][0]['id'])
 
-        cmd3 = 'radosgw-admin key create --subuser=%s:swift --uid=%s$%s --tenant=%s --key-type=swift --gen-secret ' \
-               '--cluster %s' %(user_names[0], user_names[0], tenant1, tenant1, config.cluster_name)
+        cmd3 = 'radosgw-admin key create --subuser=%s:swift --uid=%s$%s --tenant=%s --key-type=swift --gen-secret' \
+               % (user_names[0], user_names[0], tenant1, tenant1)
         out3 = utils.exec_shell_cmd(cmd3)
 
         if out3 is False:
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
     config.container_count = doc['config']['container_count']
     config.objects_count = doc['config']['objects_count']
-    config.cluster_name = doc['config']['cluster_name']
+
     config.objects_size_range = {'min': doc['config']['objects_size_range']['min'],
                                  'max': doc['config']['objects_size_range']['max']}
 
