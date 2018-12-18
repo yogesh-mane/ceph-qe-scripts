@@ -49,6 +49,7 @@ def test_exec(config):
         test_info.failed_status('user creation failed')
         sys.exit(1)
 
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='RGW Automation')
@@ -64,7 +65,6 @@ if __name__ == '__main__':
     yaml_file = args.config
     config = Config()
     if yaml_file is None:
-        config.cluster_name = 'ceph'
         config.user_count = 2
     else:
         with open(yaml_file, 'r') as f:

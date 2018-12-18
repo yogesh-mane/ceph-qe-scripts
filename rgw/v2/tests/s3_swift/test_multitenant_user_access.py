@@ -35,13 +35,12 @@ covers TCs both: CEPH-9741, CEPH-9740
 """
 
 
-def create_tenant_user(tenant_name, user_id, cluster_name='ceph'):
+def create_tenant_user(tenant_name, user_id):
     # using userid as displayname
     admin_ops = UserMgmt()
     return admin_ops.create_tenant_user(
         user_id=user_id,
         displayname=user_id,
-        cluster_name=cluster_name,
         tenant_name=tenant_name)
 
 

@@ -3,5 +3,4 @@
 # TC 11213
 config:
  bucket_policy_op: delete
- cluster_name: c1
 

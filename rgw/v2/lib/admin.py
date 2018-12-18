@@ -13,13 +13,11 @@ class UserMgmt(object):
     def __init__(self):
         self.exec_cmd = lambda cmd: subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
-    def create_admin_user(self, user_id, displayname, cluster_name='ceph'):
+    def create_admin_user(self, user_id, displayname):
         try:
             write_user_info = AddUserInfo()
             basic_io_structure = BasicIOInfoStructure()
-            log.info('cluster name: %s' % cluster_name)
-            cmd = 'radosgw-admin user create --uid=%s --display-name=%s --cluster %s' % (
-                user_id, displayname, cluster_name)
+            cmd = 'radosgw-admin user create --uid=%s --display-name=%s' % (user_id, displayname)
             log.info('cmd to execute:\n%s' % cmd)
             variable = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             v = variable.stdout.read()
@@ -45,7 +43,7 @@ class UserMgmt(object):
             # traceback.print_exc(e)
             return False
 
-    def create_tenant_user(self, tenant_name, user_id, displayname, cluster_name="ceph"):
+    def create_tenant_user(self, tenant_name, user_id, displayname):
 
         try:
             write_user_info = AddUserInfo()
@@ -53,8 +51,8 @@ class UserMgmt(object):
             tenant_info = TenantInfo()
             keys = utils.gen_access_key_secret_key(user_id)
             cmd = 'radosgw-admin --tenant %s --uid %s --display-name "%s" ' \
-                  '--access_key %s --secret %s user create --cluster %s' % \
-                  (tenant_name, user_id, displayname, keys['access_key'], keys['secret_key'], cluster_name)
+                  '--access_key %s --secret %s user create' % \
+                  (tenant_name, user_id, displayname, keys['access_key'], keys['secret_key'])
             log.info('cmd to execute:\n%s' % cmd)
             variable = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             v = variable.stdout.read()
@@ -81,14 +79,14 @@ class UserMgmt(object):
             log.error(error)
             return False
 
-    def create_subuser(self, tenant_name, user_id, cluster_name="ceph"):
+    def create_subuser(self, tenant_name, user_id):
         try:
             write_user_info = AddUserInfo()
             basic_io_structure = BasicIOInfoStructure()
             tenant_info = TenantInfo()
             keys = utils.gen_access_key_secret_key(user_id)
-            cmd = 'radosgw-admin subuser create --uid=%s$%s --subuser=%s:swift --tenant=%s --access=full --cluster %s' \
-                  % (tenant_name, user_id, user_id, tenant_name, cluster_name)
+            cmd = 'radosgw-admin subuser create --uid=%s$%s --subuser=%s:swift --tenant=%s --access=full' \
+                  % (tenant_name, user_id, user_id, tenant_name)
             log.info('cmd to execute:\n%s' % cmd)
             variable = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             v = variable.stdout.read()
@@ -118,16 +116,16 @@ class QuotaMgmt(object):
     def __init__(self):
         self.exec_cmd = lambda cmd: subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
-    def set_bucket_quota(self, uid, max_objects, cluster_name='ceph'):
-        cmd = 'radosgw-admin quota set --uid=%s --quota-scope=bucket --max-objects=%s --cluster %s' \
-              % (uid, max_objects, cluster_name)
+    def set_bucket_quota(self, uid, max_objects):
+        cmd = 'radosgw-admin quota set --uid=%s --quota-scope=bucket --max-objects=%s' \
+              % (uid, max_objects)
         status = utils.exec_shell_cmd(cmd)
         if not status[0]:
             raise AssertionError, status[1]
         log.info('quota set complete')
 
-    def enable_bucket_quota(self, uid, cluster_name='ceph'):
-        cmd = 'radosgw-admin quota enable --quota-scope=bucket --uid=%s --cluster %s' % (uid, cluster_name)
+    def enable_bucket_quota(self, uid):
+        cmd = 'radosgw-admin quota enable --quota-scope=bucket --uid=%s' % (uid)
         status = utils.exec_shell_cmd(cmd)
         if not status[0]:
             raise AssertionError, status[1]

@@ -10,13 +10,13 @@ class UserMgmt(object):
 
         self.exec_cmd = lambda cmd: subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
-    def create_admin_user(self, username, displayname, cluster_name='ceph'):
+    def create_admin_user(self, username, displayname):
 
         try:
 
             add_io_info = AddIOInfo()
 
-            cmd = 'radosgw-admin user create --uid=%s --display-name=%s --cluster %s' % (username, displayname, cluster_name)
+            cmd = 'radosgw-admin user create --uid=%s --display-name=%s' % (username, displayname)
             log.info('cmd: %s' % cmd)
             variable = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             v = variable.stdout.read()

@@ -2,7 +2,6 @@
 # script: test_Mbuckets_with_Nobjects.py
 config:
  bucket_count: 1
- cluster_name: c1
  test_ops:
       create_bucket: true
       sharding:

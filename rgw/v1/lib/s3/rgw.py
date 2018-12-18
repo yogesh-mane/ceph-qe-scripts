@@ -10,7 +10,7 @@ import random
 import string
 
 
-def create_users(no_of_users_to_create, cluster_name='ceph'):
+def create_users(no_of_users_to_create):
     admin_ops = UserMgmt()
 
     all_users_details = []
@@ -19,7 +19,7 @@ def create_users(no_of_users_to_create, cluster_name='ceph'):
         user_details = admin_ops.create_admin_user(
             names.get_first_name().lower() + random.choice(string.ascii_lowercase) + "." +
             str(random.randint(1, 1000)) + ".",
-            names.get_full_name().lower(), cluster_name)
+            names.get_full_name().lower())
 
         all_users_details.append(user_details)
 

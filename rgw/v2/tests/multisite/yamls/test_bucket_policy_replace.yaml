@@ -3,4 +3,3 @@
 # TC 11215
 config:
  bucket_policy_op: replace
- cluster_name: c1

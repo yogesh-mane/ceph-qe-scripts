@@ -42,20 +42,19 @@ def resource_op(exec_info):
         return False
 
 
-def create_users(no_of_users_to_create, cluster_name='ceph'):
+def create_users(no_of_users_to_create):
     admin_ops = UserMgmt()
     all_users_details = []
     for i in range(no_of_users_to_create):
         user_details = admin_ops.create_admin_user(
             user_id=names.get_first_name().lower() + random.choice(string.ascii_lowercase) + "." + str(
                 random.randint(1, 1000)),
-            displayname=names.get_full_name().lower(),
-            cluster_name=cluster_name)
+            displayname=names.get_full_name().lower())
         all_users_details.append(user_details)
     return all_users_details
 
 
-def create_tenant_users(no_of_users_to_create, tenant_name, cluster_name='ceph'):
+def create_tenant_users(no_of_users_to_create, tenant_name):
     admin_ops = UserMgmt()
     all_users_details = []
     for i in range(no_of_users_to_create):
@@ -63,7 +62,6 @@ def create_tenant_users(no_of_users_to_create, tenant_name, cluster_name='ceph')
             user_id=names.get_first_name().lower() + random.choice(string.ascii_lowercase) + "." + str(
                 random.randint(1, 1000)),
             displayname=names.get_full_name().lower(),
-            cluster_name=cluster_name,
             tenant_name=tenant_name)
         all_users_details.append(user_details)
     return all_users_details

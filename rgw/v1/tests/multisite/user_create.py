@@ -20,7 +20,7 @@ def test_exec(config):
     try:
         test_info.started_info()
 
-        all_user_details = rgw_lib.create_users(config.user_count, config.cluster_name)
+        all_user_details = rgw_lib.create_users(config.user_count)
 
         # dump the list of users into a file
 
@@ -51,7 +51,6 @@ if __name__ == '__main__':
     yaml_file = args.config
     config = Config()
     if yaml_file is None:
-        config.cluster_name = 'ceph'
         config.user_count = 2
     else:
         with open(yaml_file, 'r') as f:
