@@ -24,15 +24,13 @@ ACLS = {0: 'private',
 
 def create_bucket(rgw_conn, user_info, rand_no=0):
 
-    s3_ops = ResourceOps()
-
     bucket_name_to_create = utils.gen_bucket_name_from_userid(user_info['user_id'], rand_no)
 
     log.info('creating bucket with name: %s' % bucket_name_to_create)
 
-    bucket = s3_ops.resource_op(rgw_conn, 'Bucket', bucket_name_to_create)
+    bucket = s3lib.resource_op(rgw_conn, 'Bucket', bucket_name_to_create)
 
-    created = s3_ops.resource_op(bucket, 'create', None, **{'access_key': user_info['access_key']})
+    created = s3lib.resource_op(bucket, 'create', None, **{'access_key': user_info['access_key']})
 
     if created is False:
         raise TestExecError("Resource execution failed: bucket creation faield")
@@ -52,12 +50,9 @@ def create_bucket(rgw_conn, user_info, rand_no=0):
 
 def test_acls_private(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
-
     # test for acl: private
 
-    s3_ops = ResourceOps()
-
-    u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
+    u1_bucket_acl = s3lib.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[0])
     u1_bucket_acl.put(ACL=ACLS[0])
 
@@ -65,7 +60,7 @@ def test_acls_private(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('u1 bucket info')
 
-    u1_bucket_info = s3_ops.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
+    u1_bucket_info = s3lib.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
 
     log.info(u1_bucket_info.name)
     log.info(u1_bucket_info.creation_date)
@@ -73,7 +68,7 @@ def test_acls_private(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('trying to access u1 bucket info from u2 after setting u1 bucket acls to private')
 
-    access_u1_bucket_from_u2 = s3_ops.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
+    access_u1_bucket_from_u2 = s3lib.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
 
     log.info('tryring to delete u1_bucket from u2')
 
@@ -95,9 +90,7 @@ def test_acls_public_write(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     # test for acl: public-read-write
 
-    s3_ops = ResourceOps()
-
-    u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
+    u1_bucket_acl = s3lib.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[2])
     u1_bucket_acl.put(ACL=ACLS[2])
 
@@ -105,7 +98,7 @@ def test_acls_public_write(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('u1 bucket info')
 
-    u1_bucket_info = s3_ops.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
+    u1_bucket_info = s3lib.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
 
     log.info(u1_bucket_info.name)
     log.info(u1_bucket_info.creation_date)
@@ -113,7 +106,7 @@ def test_acls_public_write(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('trying to access u1 bucket info from u2 after setting u1 bucket acls to public-read-write')
 
-    access_u1_bucket_from_u2 = s3_ops.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
+    access_u1_bucket_from_u2 = s3lib.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
 
     log.info('tryring to delete u1_bucket from u2')
 
@@ -133,9 +126,7 @@ def test_acls_public_read(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     # test for public_read
 
-    s3_ops = ResourceOps()
-
-    u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
+    u1_bucket_acl = s3lib.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[1])
     u1_bucket_acl.put(ACL=ACLS[1])
 
@@ -143,7 +134,7 @@ def test_acls_public_read(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('u1 bucket info')
 
-    u1_bucket_info = s3_ops.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
+    u1_bucket_info = s3lib.resource_op(u1_rgw_conn, 'Bucket', u1_bucket.name)
 
     log.info(u1_bucket_info.name)
     log.info(u1_bucket_info.creation_date)
@@ -169,7 +160,7 @@ def test_acls_public_read(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     upload_info = dict({'access_key': u1['access_key']}, **data_info)
 
-    object_uploaded_status = s3_ops.resource_op(u1_bucket, 'upload_file', s3_object_path, s3_object_name,
+    object_uploaded_status = s3lib.resource_op(u1_bucket, 'upload_file', s3_object_path, s3_object_name,
                                                 **upload_info)
 
     if object_uploaded_status is False:
@@ -180,7 +171,7 @@ def test_acls_public_read(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     log.info('trying to access u1 bucket and its objects info from u2 after setting u1 bucket acls to public read')
 
-    access_u1_bucket_from_u2 = s3_ops.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
+    access_u1_bucket_from_u2 = s3lib.resource_op(u2_rgw_conn, 'Bucket', u1_bucket.name)
 
 
     try:
@@ -220,8 +211,6 @@ def test_exec(config):
     try:
 
         test_info.started_info()
-
-        s3_ops = ResourceOps()
 
         # create user
 

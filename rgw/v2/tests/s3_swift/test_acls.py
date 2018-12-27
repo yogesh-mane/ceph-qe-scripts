@@ -25,7 +25,7 @@ ACLS = {0: 'private',
 
 def create_bucket(rgw_conn, user_info, rand_no=0):
 
-    s3_ops = ResourceOps()
+    s3_ops =ResourceOps()
 
     bucket_name_to_create = utils.gen_bucket_name_from_userid(user_info['user_id'], rand_no)
 
