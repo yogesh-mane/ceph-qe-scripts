@@ -25,8 +25,6 @@ ACLS = {0: 'private',
 
 def create_bucket(rgw_conn, user_info, rand_no=0):
 
-    s3_ops =ResourceOps()
-
     bucket_name_to_create = utils.gen_bucket_name_from_userid(user_info['user_id'], rand_no)
 
     log.info('creating bucket with name: %s' % bucket_name_to_create)
@@ -53,10 +51,7 @@ def create_bucket(rgw_conn, user_info, rand_no=0):
 
 def test_acls_private(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
-
     # test for acl: private
-
-    s3_ops = ResourceOps()
 
     u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[0])
@@ -96,8 +91,6 @@ def test_acls_public_write(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     # test for acl: public-read-write
 
-    s3_ops = ResourceOps()
-
     u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[2])
     u1_bucket_acl.put(ACL=ACLS[2])
@@ -133,8 +126,6 @@ def test_acls_public_write(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 def test_acls_public_read(u1_rgw_conn, u1, u2_rgw_conn, u1_bucket, u2_bucket):
 
     # test for public_read
-
-    s3_ops = ResourceOps()
 
     u1_bucket_acl = s3_ops.resource_op(u1_rgw_conn, 'BucketAcl', u1_bucket.name)
     log.info('setting bucket acl: %s' % ACLS[1])
@@ -221,9 +212,6 @@ def test_exec(config):
     try:
 
         test_info.started_info()
-
-        s3_ops = ResourceOps()
-
         # create user
 
         config.user_count = 2
