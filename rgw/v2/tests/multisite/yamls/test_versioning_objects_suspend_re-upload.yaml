@@ -3,12 +3,12 @@
 # covers even for CEPH-9223
 config:
  user_count: 1
- bucket_count: 1
- objects_count: 2
+ bucket_count: 10
+ objects_count: 1000
  version_count: 4
  objects_size_range:
-  min: 5
-  max: 15
+  min: 250
+  max: 12500
  test_ops:
       enable_version: true
       suspend_version: true
