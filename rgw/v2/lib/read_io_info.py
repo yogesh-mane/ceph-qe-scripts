@@ -17,18 +17,21 @@ def verify_key(each_key, bucket):
     key_from_s3 = bucket.Object(os.path.basename(each_key['name']))
     log.info('verifying size')
     log.info('size from yaml: %s' % each_key['size'])
-    log.info('size from s3: %s' % key_from_s3.content_length)
-    if int(each_key['size']) != int(key_from_s3.content_length):
-        raise TestExecError("Size not matched")
-    log.info('verifying md5')
-    log.info('md5_local: %s' % each_key['md5_local'])
-    key_from_s3.download_file('download.temp')
-    downloaded_md5 = utils.get_md5('download.temp')
-    log.info('md5_from_s3: %s' % downloaded_md5)
-    if each_key['md5_local'] != downloaded_md5:
-        raise TestExecError("Md5 not matched")
-    utils.exec_shell_cmd('sudo rm -rf download.temp')
-    log.info('verification complete for the key: %s' % key_from_s3.key)
+    if each_key['size'] is None:
+        log.info('Key is deleted')
+    else:
+        log.info('size from s3: %s' % key_from_s3.content_length)
+        if int(each_key['size']) != int(key_from_s3.content_length):
+            raise TestExecError("Size not matched")
+        log.info('verifying md5')
+        log.info('md5_local: %s' % each_key['md5_local'])
+        key_from_s3.download_file('download.temp')
+        downloaded_md5 = utils.get_md5('download.temp')
+        log.info('md5_from_s3: %s' % downloaded_md5)
+        if each_key['md5_local'] != downloaded_md5:
+            raise TestExecError("Md5 not matched")
+        utils.exec_shell_cmd('sudo rm -rf download.temp')
+        log.info('verification complete for the key: %s' % key_from_s3.key)
 
 
 def verify_key_with_version(each_key, bucket):
@@ -41,20 +44,23 @@ def verify_key_with_version(each_key, bucket):
         key_from_s3_with_version = key_from_s3.get(VersionId=each_version['version_id'])
         log.info('verifying size')
         log.info('size from yaml: %s' % each_version['size'])
-        log.info('size from s3 %s' % key_from_s3_with_version['ContentLength'])
-        if int(each_version['size'] != int(key_from_s3_with_version['ContentLength'])):
-            raise TestExecError('Size not matched')
-        log.info('verifying md5')
-        log.info('md5_local: %s' % each_version['md5_local'])
-        key_from_s3.download_file('download.temp',
-                                  ExtraArgs={'VersionId': each_version['version_id']})
-        downloaded_md5 = utils.get_md5('download.temp')
-        log.info('md5_from_s3: %s' % downloaded_md5)
-        if each_version['md5_local'] != downloaded_md5:
-            raise TestExecError("Md5 not matched")
-        utils.exec_shell_cmd('sudo rm -rf download.temp')
-        log.info('verification complete for the key: %s ---> version_id: %s' %
-                 (key_from_s3.key, each_version['version_id']))
+        if each_version['size'] is None:
+            log.info('Key is deleted')
+        else:
+            log.info('size from s3 %s' % key_from_s3_with_version['ContentLength'])
+            if int(each_version['size'] != int(key_from_s3_with_version['ContentLength'])):
+                raise TestExecError('Size not matched')
+            log.info('verifying md5')
+            log.info('md5_local: %s' % each_version['md5_local'])
+            key_from_s3.download_file('download.temp',
+                                      ExtraArgs={'VersionId': each_version['version_id']})
+            downloaded_md5 = utils.get_md5('download.temp')
+            log.info('md5_from_s3: %s' % downloaded_md5)
+            if each_version['md5_local'] != downloaded_md5:
+                raise TestExecError("Md5 not matched")
+            utils.exec_shell_cmd('sudo rm -rf download.temp')
+            log.info('verification complete for the key: %s ---> version_id: %s' %
+                     (key_from_s3.key, each_version['version_id']))
 
 
 class ReadIOInfo(object):
